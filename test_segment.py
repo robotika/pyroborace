@@ -46,16 +46,17 @@ class SegmentTest(unittest.TestCase):
 
     def test_line_offset(self):
         line = Segment(length=30.0)
-        self.assertEqual(line.get_offset((3.0, 4.0, 0))[0], 4.0)
-        self.assertEqual(line.get_offset((33.0, 4.0, 0))[0], None)
-        self.assertEqual(line.get_offset((5.0, -2.0, 0))[0], -2.0)
+        self.assertEqual(line.get_offset((3.0, 4.0, 0)), (4.0, 0))
+        self.assertEqual(line.get_offset((33.0, 4.0, 0)), (None, None))
+        self.assertEqual(line.get_offset((5.0, -2.0, 0.1)), (-2.0, 0.1))
 
     def test_arc_offset(self):
         arc = Segment(arc=math.radians(90), radius=10.0)
-        self.assertEqual(arc.get_offset((0, 0, 0))[0], 0)
-        self.assertEqual(arc.get_offset((10, 0, 0))[0], -(math.sqrt(2)*10 - 10))
-        self.assertEqual(arc.get_offset((-1, 0, 0))[0], None)
-        self.assertEqual(arc.get_offset((11, 11, 0))[0], None)
+        self.assertEqual(arc.get_offset((0, 0, 0)), (0, 0))
+        self.assertEqual(arc.get_offset((10, 0, 0)),
+                (-(math.sqrt(2)*10 - 10), math.radians(-45)))
+        self.assertEqual(arc.get_offset((-1, 0, 0)), (None, None))
+        self.assertEqual(arc.get_offset((11, 11, 0)), (None, None))
 
         arc = Segment(arc=math.radians(-90), radius=10.0)
         self.assertEqual(arc.get_offset((0, 0, 0))[0], 0)

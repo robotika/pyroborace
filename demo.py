@@ -66,7 +66,7 @@ def drive(track, offset):
 
                 turn = segment_turn(segment)
                 if heading_offset is not None:
-                    turn = -math.degrees(heading_offset)
+                    turn -= math.degrees(heading_offset)
                 if signed_dist < -1.0:
                     turn += min(1.0, -1.0 - signed_dist)
                 elif signed_dist > 1.0:

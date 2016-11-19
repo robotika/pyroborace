@@ -79,14 +79,17 @@ class Segment:
 
         if self.arc > 0:
             # radius - distance from Point(0, radius)
-            if 0 <= math.atan2(x, self.radius - y) <= self.arc:
-                return self.radius - math.hypot(x, y - self.radius), None
+            angle = math.atan2(x, self.radius - y)
+            if 0 <= angle <= self.arc:
+                return (self.radius - math.hypot(x, y - self.radius),
+                        normalize_angle(heading - angle))
             return None, None
 
         # radius - distance from Point(0, -radius)
-        if 0 <= -math.atan2(-x, y + self.radius) <= -self.arc:
-            return math.hypot(x, y + self.radius) - self.radius, None
-
+        angle = -math.atan2(-x, y + self.radius)
+        if 0 <= angle <= -self.arc:
+            return (math.hypot(x, y + self.radius) - self.radius,
+                    normalize_angle(heading + angle))
         return None, None
 
     def _step(self):
