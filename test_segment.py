@@ -44,23 +44,23 @@ class SegmentTest(unittest.TestCase):
         self.assertAlmostEqual(y, 271.0175584268419)  # this is wrong
         self.assertAlmostEqual(heading, math.radians(-27.0))
 
-    def test_nearest_line(self):
+    def test_line_offset(self):
         line = Segment(length=30.0)
-        self.assertEqual(line.nearest(3.0, 4.0), 4.0)
-        self.assertEqual(line.nearest(33.0, 4.0), None)
-        self.assertEqual(line.nearest(5.0, -2.0), -2.0)
+        self.assertEqual(line.get_offset((3.0, 4.0, 0))[0], 4.0)
+        self.assertEqual(line.get_offset((33.0, 4.0, 0))[0], None)
+        self.assertEqual(line.get_offset((5.0, -2.0, 0))[0], -2.0)
 
-    def test_nearest_arc(self):
+    def test_arc_offset(self):
         arc = Segment(arc=math.radians(90), radius=10.0)
-        self.assertEqual(arc.nearest(0, 0), 0)
-        self.assertEqual(arc.nearest(10, 0), -(math.sqrt(2)*10 - 10))
-        self.assertEqual(arc.nearest(-1, 0), None)
-        self.assertEqual(arc.nearest(11, 11), None)
+        self.assertEqual(arc.get_offset((0, 0, 0))[0], 0)
+        self.assertEqual(arc.get_offset((10, 0, 0))[0], -(math.sqrt(2)*10 - 10))
+        self.assertEqual(arc.get_offset((-1, 0, 0))[0], None)
+        self.assertEqual(arc.get_offset((11, 11, 0))[0], None)
 
         arc = Segment(arc=math.radians(-90), radius=10.0)
-        self.assertEqual(arc.nearest(0, 0), 0)
-        self.assertEqual(arc.nearest(10, 0), math.sqrt(2)*10 - 10)
-        self.assertEqual(arc.nearest(-1, 0), None)
+        self.assertEqual(arc.get_offset((0, 0, 0))[0], 0)
+        self.assertEqual(arc.get_offset((10, 0, 0))[0], math.sqrt(2)*10 - 10)
+        self.assertEqual(arc.get_offset((-1, 0, 0))[0], None)
 
     def test_segment_str(self):
         s = Segment(name='s11', length=10)

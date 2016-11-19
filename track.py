@@ -84,24 +84,23 @@ class Track:
             sx = global_x - x
             sy = global_y - y
             sx, sy = ca*sx - sa*sy, sa*sx + ca*sy
-            dist = segment.nearest(sx, sy)
+            dist = segment.get_offset((sx, sy, global_a - a))[0]
             if dist is not None:
                 if abs(dist) < self.width/2.0:
                     return segment, (sx, sy, global_a - a)
             track_pose = segment.step(track_pose)
         return None, None
 
-    def nearest(self, global_x, global_y):
-        segment, rel_pose = self.nearest_segment((global_x, global_y, 0.0))
+    def get_offset(self, pose):
+        segment, rel_pose = self.nearest_segment(pose)
         if segment is None:
             assert rel_pose is None, rel_pose
-            return None
+            return None, None
         assert rel_pose is not None
-        sx, sy, sa = rel_pose
-        dist = segment.nearest(sx, sy)
+        dist, diff_heading = segment.get_offset(rel_pose)
         assert dist is not None
         assert abs(dist) < self.width/2.0, (abs(dist), self.width)
-        return dist
+        return dist, diff_heading
 
 
 if __name__ == "__main__":

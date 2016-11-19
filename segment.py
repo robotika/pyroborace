@@ -3,6 +3,15 @@ import sys
 from xml.dom.minidom import parse, Node
 
 
+def normalize_angle(angle):
+    """angle in radians, return in range -PI .. PI"""
+    while angle < -math.pi:
+        angle += 2*math.pi
+    while angle > math.pi:
+        angle -= 2*math.pi
+    return angle 
+
+
 class Segment:
 
     @classmethod
@@ -47,30 +56,38 @@ class Segment:
         return "Segment('{}', {}, {}, {})".format(self.name, self.length,
                                                   self.arc, self.radius)
 
-    def nearest(self, x, y):
-        """Return signed distance from this segment
+    def get_offset(self, pose):
+        """Calculate offset from the segment.
+
+        pose is segment relative position
+        (the segment starts at (0, 0, 0))
+        
+        Return signed distance offset and heading offset
 
         Distance is positive to the left side.
         In case of (x,y) outside the segment "influence"
         return None"""
 
+        x, y, heading = pose
+
         # TODO variable turns
         if self.length is not None:
             # line
             if 0 <= x <= self.length:
-                return y
-            return None
+                return y, normalize_angle(heading)
+            return None, None
 
         if self.arc > 0:
             # radius - distance from Point(0, radius)
             if 0 <= math.atan2(x, self.radius - y) <= self.arc:
-                return self.radius - math.hypot(x, y - self.radius)
-            return None
+                return self.radius - math.hypot(x, y - self.radius), None
+            return None, None
 
         # radius - distance from Point(0, -radius)
         if 0 <= -math.atan2(-x, y + self.radius) <= -self.arc:
-            return math.hypot(x, y + self.radius) - self.radius
-        return None
+            return math.hypot(x, y + self.radius) - self.radius, None
+
+        return None, None
 
     def _step(self):
         if self.arc is None:
