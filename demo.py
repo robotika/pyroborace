@@ -30,15 +30,6 @@ def segment_turn(segment):
     return math.degrees(angle)
 
 
-def normalize_angle(angle):
-    """angle in radians, return in range -PI .. PI"""
-    while angle < -math.pi:
-        angle += 2*math.pi
-    while angle > math.pi:
-        angle -= 2*math.pi
-    return angle 
-
-
 def drive(track, offset):
     soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     port = 4001
@@ -67,15 +58,15 @@ def drive(track, offset):
             heading = angZ  # in radiands +/- PI
             segment, rel_pose = track.nearest_segment((x, y, heading))
             if segment is not None:
-                signed_dist = segment.nearest(*rel_pose[:2])
+                signed_dist, heading_offset = segment.get_offset(rel_pose)
                 if signed_dist < 5.0:
                     gas = 0.2
                 else:
                     gas = 0.1
 
                 turn = segment_turn(segment)
-                if segment.arc is None:
-                    turn = -math.degrees(normalize_angle(rel_pose[2]))
+                if heading_offset is not None:
+                    turn -= math.degrees(heading_offset)
                 if signed_dist < -1.0:
                     turn += min(1.0, -1.0 - signed_dist)
                 elif signed_dist > 1.0:
