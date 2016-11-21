@@ -1,2 +1,9 @@
+version: 1.0.{build}
+skip_branch_with_pr: true
+environment:
+  matrix:
+  - PYTHON: c:\python27
+  - PYTHON: c:\python27-x64
 build: off
-test_script: C:\\Python27\\python.exe -m unittest discover
+test_script:
+- cmd: '%PYTHON%\python.exe -m unittest discover'
