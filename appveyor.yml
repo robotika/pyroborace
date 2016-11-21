@@ -1,0 +1,2 @@
+build: off
+test_script: C:\\Python27\\python.exe -m unittest discover
