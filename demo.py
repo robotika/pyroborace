@@ -88,7 +88,7 @@ if __name__ == "__main__":
     track = Track.from_xml_file(filename)
     track.width = 100  # extra margin
     assert filename.endswith('espie.xml')  # otherwise not defined offset
-    offset = 873.676+30, 764.784
+    offset = 0, 0
     drive(track, offset)
 
 # vim: expandtab sw=4 ts=4
