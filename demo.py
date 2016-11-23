@@ -30,13 +30,12 @@ def segment_turn(segment):
     return math.degrees(angle)
 
 
-def drive(track, offset):
+def drive(track):
     soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     port = 4001
     soc.bind(('', port))
     soc.settimeout(1.0)
     ctr = 0
-    start_position = None
     gas = 0.0
     brake = 0.0
     turn = 0.0
@@ -49,14 +48,8 @@ def drive(track, offset):
             assert len(status) == 794, len(status)
             absPosX, absPosY, absPosZ = struct.unpack_from('fff', status, 44)
             angX, angY, angZ = struct.unpack_from('fff', status, 56)
-            num_cars = struct.unpack_from('B', status, 128)
-            posX = struct.unpack_from('f', status, 168)[0]
-            posY = struct.unpack_from('f', status, 324)[0]
-            speed = struct.unpack_from('f', status, 480)[0]
-            x = absPosX - offset[0]
-            y = absPosY - offset[1]
             heading = angZ  # in radiands +/- PI
-            segment, rel_pose = track.nearest_segment((x, y, heading))
+            segment, rel_pose = track.nearest_segment((absPosX, absPosY, heading))
             if segment is not None:
                 signed_dist, heading_offset = segment.get_offset(rel_pose)
                 if signed_dist < 5.0:
@@ -87,8 +80,6 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     track = Track.from_xml_file(filename)
     track.width = 100  # extra margin
-    assert filename.endswith('espie.xml')  # otherwise not defined offset
-    offset = 873.676+30, 764.784
-    drive(track, offset)
+    drive(track)
 
 # vim: expandtab sw=4 ts=4
