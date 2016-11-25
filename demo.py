@@ -60,11 +60,18 @@ def drive(track):
                 turn = segment_turn(segment)
                 if heading_offset is not None:
                     turn -= math.degrees(heading_offset)
-                if signed_dist < -1.0:
-                    turn += min(1.0, -1.0 - signed_dist)
-                elif signed_dist > 1.0:
+
+                dead_band = 0.1
+                max_dist_turn_deg = 10
+
+                if signed_dist < -dead_band:
+                    # turn left
+                    turn += min(max_dist_turn_deg, -dead_band - signed_dist)
+
+                elif signed_dist > dead_band:
                     # turn right
-                    turn += max(-1.0, 1.0 - signed_dist)  
+                    turn += max(-max_dist_turn_deg, dead_band - signed_dist)
+
             if prev_segment != segment:
                 print segment, rel_pose
                 prev_segment = segment
