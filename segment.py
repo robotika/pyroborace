@@ -70,25 +70,33 @@ class Segment:
 
         x, y, heading = pose
 
-        # TODO variable turns
         if self.length is not None:
             # line
             if 0 <= x <= self.length:
                 return y, normalize_angle(heading)
             return None, None
 
+        # variable turns
+        end_radius = self.end_radius
+        if end_radius is None:
+            end_radius = self.radius
+
         if self.arc > 0:
             # radius - distance from Point(0, radius)
             angle = math.atan2(x, self.radius - y)
             if 0 <= angle <= self.arc:
-                return (self.radius - math.hypot(x, y - self.radius),
+                t = angle / self.arc
+                radius = (1.0 - t) * self.radius + t * end_radius
+                return (radius - math.hypot(x, y - self.radius),
                         normalize_angle(heading - angle))
             return None, None
 
         # radius - distance from Point(0, -radius)
         angle = -math.atan2(-x, y + self.radius)
         if 0 <= angle <= -self.arc:
-            return (math.hypot(x, y + self.radius) - self.radius,
+            t = -angle / self.arc
+            radius = (1.0 - t) * self.radius + t * end_radius
+            return (math.hypot(x, y + self.radius) - radius,
                     normalize_angle(heading + angle))
         return None, None
 

@@ -63,6 +63,15 @@ class SegmentTest(unittest.TestCase):
         self.assertEqual(arc.get_offset((10, 0, 0))[0], math.sqrt(2)*10 - 10)
         self.assertEqual(arc.get_offset((-1, 0, 0))[0], None)
 
+    def test_variable_turn_offset(self):
+        arc = Segment(arc=math.radians(90), radius=10.0, end_radius=20.0)
+        self.assertEqual(arc.get_offset((0, 0, 0)), (0, 0))
+        self.assertEqual(arc.get_offset((20, 10, math.radians(90))), (0, 0))
+
+        arc = Segment(arc=math.radians(-90), radius=10.0, end_radius=20.0)
+        self.assertEqual(arc.get_offset((0, 0, 0)), (0, 0))
+        self.assertEqual(arc.get_offset((20, -10, math.radians(-90))), (0, 0))
+
     def test_segment_str(self):
         s = Segment(name='s11', length=10)
         self.assertEqual(str(s), "Segment('s11', 10, None, None)")
