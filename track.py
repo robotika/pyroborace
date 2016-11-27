@@ -6,6 +6,7 @@
 """
 
 import math
+import os
 import sys
 from xml.dom.minidom import parse, Node
 
@@ -19,12 +20,13 @@ def get_main_track(xmldoc):
     return None
 
 
-def get_track_width(xmldoc):
+def get_track_root_info(xmldoc, name):
+    assert name in ['width', 'profil steps length'], name
     for section in xmldoc.getElementsByTagName('section'):
         if section.getAttribute('name') == 'Main Track':
             # search for <attnum name="width" unit="m" val="13"/>
             for attnum in section.getElementsByTagName('attnum'):
-                if attnum.getAttribute('name') == 'width':
+                if attnum.getAttribute('name') == name:
                     return float(attnum.getAttribute('val'))
     return None
 
@@ -50,9 +52,7 @@ def track2xy(track):
     minx, miny = 0.0, 0.0
     for segment in track:
         x, y, heading = segment.step((x, y, heading))
-        print segment.name, x, y, math.degrees(heading)
-        minx, miny = min(minx, x), min(miny, y)
-    return minx, miny
+    return x, y, heading
 
 
 class Track:
@@ -61,12 +61,45 @@ class Track:
     @staticmethod
     def from_xml_file(filename):
         xmldoc = parse(filename)
+        width = get_track_root_info(xmldoc, 'width')
+        default_profil_steps_length = get_track_root_info(xmldoc, 'profil steps length')
+
         segments = []
         for section in get_main_track(xmldoc).childNodes:
             if section.nodeType == Node.ELEMENT_NODE:
-                segments.append(Segment.from_xml(section))
+                s = Segment.from_xml(section)
+                if s.end_radius is None:
+                    segments.append(s)
+                else:
+                    profil_steps_length = default_profil_steps_length
+                    if s.profil_steps_length is not None:
+                        profil_steps_length = s.profil_steps_length
+                    length = abs((s.radius + s.end_radius)/2.0 * s.arc)
+                    num_steps = int(length/profil_steps_length) + 1
+                    if num_steps == 1:
+                        segments.append(s)
+                    else:
+                        # rearange steps so:
+                        #  - every part of the turn has the same length
+                        #  - the first part has curvature given by ``radius``
+                        #  - the last part had curvature given by ``end_radius``
+                        #  - there are ``steps`` parts
+                        #  - the total ``arc`` angle does not change
+                        dradius = (s.end_radius - s.radius)/float(num_steps - 1)
 
-        width = get_track_width(xmldoc)
+                        tmp = 0.0
+                        for i in xrange(num_steps):
+                            tmp += 1.0/(s.radius + i*dradius)
+                        geom_average = 1.0 / tmp
+
+                        for i in xrange(num_steps):
+                            name = s.name + '.' + str(i)
+                            radius = s.radius + i*dradius
+                            arc = s.arc * geom_average / radius
+                            segments.append(Segment(name=name, arc=arc,
+                                                    radius=radius,
+                                                    end_radius=None))
+
         return Track(segments, width)
 
     def __init__(self, segments, width):
@@ -107,9 +140,21 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print __doc__
         sys.exit(2)
-    track = Track.from_xml_file(sys.argv[1])
-    print_track(track.segments)
-    print track2xy(track.segments)
+    path = sys.argv[1]
+    if path.endswith('xml'):
+        print path
+        track = Track.from_xml_file(path)
+        print track2xy(track.segments)
+    else:
+        for dirpath, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                if filename.endswith('xml'):
+                    track = Track.from_xml_file(os.path.join(dirpath, filename))
+                    end_pose = track2xy(track.segments)
+                    print filename, end_pose
+                    assert abs(end_pose[0]) + abs(end_pose[1]) < 0.5, end_pose
+                    deg_angle = int(round(math.degrees(end_pose[2])))
+                    assert deg_angle in [-360, 0, 360], deg_angle
 
 # vim: expandtab sw=4 ts=4 
 
