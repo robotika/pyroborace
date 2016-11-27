@@ -110,6 +110,8 @@ class Track:
         """Find nearest segment on the track"""
         global_x, global_y, global_a = pose
         track_pose = 0, 0, 0
+        best = None, None
+        best_dist = None
         for segment in self.segments:
             # convert global (x,y) into pose relative coordinates
             x, y, a = track_pose
@@ -119,9 +121,14 @@ class Track:
             sx, sy = ca*sx - sa*sy, sa*sx + ca*sy
             dist = segment.get_offset((sx, sy, global_a - a))[0]
             if dist is not None:
-                if abs(dist) < self.width/2.0:
-                    return segment, (sx, sy, global_a - a)
+                if best_dist is None or abs(dist) < best_dist:
+                    best = segment, (sx, sy, global_a - a)
+                    best_dist = abs(dist)
             track_pose = segment.step(track_pose)
+
+        if best_dist is not None:
+            if best_dist < self.width/2.0:
+                return best
         return None, None
 
     def get_offset(self, pose):
