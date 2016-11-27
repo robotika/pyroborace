@@ -49,11 +49,20 @@ def drive(track):
             absPosX, absPosY, absPosZ = struct.unpack_from('fff', status, 44)
             angX, angY, angZ = struct.unpack_from('fff', status, 56)
             heading = angZ  # in radiands +/- PI
+
+            absVelX, absVelY = struct.unpack_from('ff', status, 80)
+            prediction_time = 0.5  # sec
+            absPosX += prediction_time * absVelX
+            absPosY += prediction_time * absVelY
+
             segment, rel_pose = track.nearest_segment((absPosX, absPosY, heading))
             if segment is not None:
                 signed_dist, heading_offset = segment.get_offset(rel_pose)
-                if signed_dist < 5.0:
-                    gas = 0.2
+                if abs(signed_dist) < 5.0:
+                    if abs(signed_dist) < 2.0:
+                        gas = 0.4
+                    else:
+                        gas = 0.2
                 else:
                     gas = 0.1
 
