@@ -22,6 +22,7 @@ class Segment:
         arc = None
         radius = None
         end_radius = None
+        profil_steps_length = None
         for attr in ele.childNodes:
             if attr.nodeType == Node.ELEMENT_NODE:
                 if attr.getAttribute('name') == 'type':
@@ -38,19 +39,23 @@ class Segment:
                 if attr.getAttribute('name') == 'lg':
                     assert attr.getAttribute('unit') == 'm', attr.getAttribute('unit')
                     length = float(attr.getAttribute('val'))
+                if attr.getAttribute('name') == 'profil steps length':
+                    assert attr.getAttribute('unit') == 'm', attr.getAttribute('unit')
+                    profil_steps_length = float(attr.getAttribute('val'))
 
         assert seg_type in ['lft', 'str', 'rgt'], seg_type
         if seg_type == 'rgt':
             arc = -arc
-        return Segment(name, length, arc, radius, end_radius)
+        return Segment(name, length, arc, radius, end_radius, profil_steps_length)
 
     def __init__(self, name=None, length=None, arc=None, radius=None,
-                 end_radius=None):
+                 end_radius=None, profil_steps_length=None):
         self.name = name
         self.length = length
         self.arc = arc
         self.radius = radius
         self.end_radius = end_radius
+        self.profil_steps_length = profil_steps_length
 
     def __str__(self):
         return "Segment('{}', {}, {}, {})".format(self.name, self.length,

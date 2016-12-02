@@ -1,5 +1,6 @@
 import unittest
 import math
+from xml.dom.minidom import parseString
 
 from segment import Segment
 
@@ -75,5 +76,44 @@ class SegmentTest(unittest.TestCase):
     def test_segment_str(self):
         s = Segment(name='s11', length=10)
         self.assertEqual(str(s), "Segment('s11', 10, None, None)")
+
+    def test_from_xml(self):
+        xmldoc = parseString("""
+      <section name="s6">
+        <attstr name="type" val="lft" />
+        <attnum name="arc" unit="deg" val="102.0" />
+        <attnum name="radius" unit="m" val="32.7" />
+        <attnum name="end radius" unit="m" val="38.4" />
+        <attnum name="grade" unit="%" val="-3.0" />
+        <attnum name="profil end tangent" unit="%" val="-3.0" />
+        <attnum name="profil steps length" unit="m" val="4.0" />
+        <attnum name="banking start" unit="deg" val="0.0"/>
+        <attnum name="banking end" unit="deg" val="-4.0"/>
+        <attstr name="marks" val="50;100;150"/>
+        <section name="Left Border">
+          <attnum name="width" unit="m" val="1.0" />
+          <attnum name="height" unit="m" val="0.05" />
+          <attstr name="surface" val="curb-left" />
+          <attstr name="style" val="curb" />
+        </section>
+        <section name="Left Side">
+          <attnum name="start width" unit="m" val="10.0" />
+          <attnum name="end width" unit="m" val="12.0" />
+          <attstr name="surface" val="dirtA" />
+        </section>
+        <section name="Right Side">
+          <attnum name="start width" unit="m" val="32.0" />
+          <attnum name="end width" unit="m" val="40.0" />
+          <attstr name="surface" val="sand" />
+        </section>
+      </section>
+""")
+        s = Segment.from_xml(xmldoc.childNodes[0])
+        self.assertEqual(s.name, 's6')
+        self.assertIsNone(s.length)
+        self.assertAlmostEqual(math.degrees(s.arc), 102.0)
+        self.assertAlmostEqual(s.radius, 32.7)
+        self.assertAlmostEqual(s.end_radius, 38.4)
+        self.assertAlmostEqual(s.profil_steps_length, 4.0)
 
 # vim: expandtab sw=4 ts=4
