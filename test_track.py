@@ -29,8 +29,7 @@ class TrackTest(unittest.TestCase):
         line = Segment(length=100.0)
         arc = Segment(arc=math.radians(180), radius=10.0)
 
-        # note, that width is artifically set to overlap
-        track = Track([line, arc]*2, width = 100)
+        track = Track([line, arc]*2, width = 10)
         segment, rel_pose = track.nearest_segment((50, 15, math.radians(180)))
         self.assertIsNone(segment.arc)
         self.assertAlmostEqual(rel_pose[2], 0.0)

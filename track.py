@@ -125,11 +125,7 @@ class Track:
                     best = segment, (sx, sy, global_a - a)
                     best_dist = abs(dist)
             track_pose = segment.step(track_pose)
-
-        if best_dist is not None:
-            if best_dist < self.width/2.0:
-                return best
-        return None, None
+        return best
 
     def get_offset(self, pose):
         segment, rel_pose = self.nearest_segment(pose)
