@@ -86,7 +86,6 @@ if __name__ == "__main__":
         sys.exit(2)
     filename = sys.argv[1]
     track = Track.from_xml_file(filename)
-    track.width = 100  # extra margin
     drive(track)
 
 # vim: expandtab sw=4 ts=4
