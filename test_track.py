@@ -25,4 +25,13 @@ class TrackTest(unittest.TestCase):
         self.assertIsNotNone(segment)
         self.assertAlmostEqual(segment.length, 100.0)
 
+    def test_nearest_segment(self):
+        line = Segment(length=100.0)
+        arc = Segment(arc=math.radians(180), radius=10.0)
+
+        track = Track([line, arc]*2, width = 10)
+        segment, rel_pose = track.nearest_segment((50, 15, math.radians(180)))
+        self.assertIsNone(segment.arc)
+        self.assertAlmostEqual(rel_pose[2], 0.0)
+
 # vim: expandtab sw=4 ts=4
