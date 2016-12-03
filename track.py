@@ -107,7 +107,18 @@ class Track:
         self.width = width
 
     def nearest_segment(self, pose):
-        """Find nearest segment on the track"""
+        """Find nearest segment on the track
+        
+        Return segment and relative pose to the segment
+
+        This method can return (None, None) when:
+        - there is no segment in the ``Track.segments``
+        - the ``pose`` is outside of the scope for each
+          segment
+
+        For the valid closed loop track you should always get values
+        other than (None, None).        
+        """
         global_x, global_y, global_a = pose
         track_pose = 0, 0, 0
         best = None, None
