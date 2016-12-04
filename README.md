@@ -1,4 +1,7 @@
 # pyroborace
+[![Build Status: Linux](https://img.shields.io/travis/robotika/pyroborace/master.svg?style=plastic)](https://travis-ci.org/robotika/pyroborace)
+[![Build Status: Windows](https://img.shields.io/appveyor/ci/zwn/pyroborace/master.svg?style=plastic)](https://ci.appveyor.com/project/zwn/pyroborace)
+
 Python driver for Formula-E Roborace
 
 The official API is not available yet, so we will start from UDP protocol
