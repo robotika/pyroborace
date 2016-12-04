@@ -5,5 +5,7 @@ environment:
   - PYTHON: c:\python27
   - PYTHON: c:\python27-x64
 build: off
+install:
+- cmd: '%PYTHON%\python.exe -m pip install -r requirements.txt'
 test_script:
 - cmd: '%PYTHON%\python.exe -m unittest discover'
