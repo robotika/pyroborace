@@ -1,0 +1,43 @@
+|    Signal                   |    Start Byte    |          Type    |    Units      |    Description                                                                                                   |
+|-----------------------------|:----------------:|-----------------:|---------------|------------------------------------------------------------------------------------------------------------------|
+|    LapTime                  |         0        |         float    |    seconds    |    current lap time                                                                                              |
+|    DistStart                |         4        |         float    |    meters     |    distance from start line                                                                                      |
+|    LastLapTime              |         8        |         float    |    seconds    |    last lap time                                                                                                 |
+|    RacePos                  |    12            |    int32         |    -          |    race position                                                                                                 |
+|    RPM                      |    16            |    float         |    rev/min    |    RPM                                                                                                           |
+|    EnergyLevel              |    20            |    Float         |    TBD        |    battery level                                                                                                 |
+|    GearPos                  |    24            |    int32         |    -          |    gear position                                                                                                 |
+|    WheelVelFR               |    28            |    float         |    rad/sec    |    wheel speed front right                                                                                       |
+|    WheelVelFL               |    32            |    float         |    rad/sec    |    wheel speed front left                                                                                        |
+|    WheelVelRR               |    36            |    float         |    rad/sec    |    wheel speed rear right                                                                                        |
+|    WheelVelRL               |    40            |    float         |    rad/sec    |    wheel speed rear left                                                                                         |
+|    AbsPosX                  |    44            |    float         |    meters     |    position of vehicle CG in abs CS                                                                              |
+|    AbsPosY                  |    48            |    float         |    meters     |                                                                                                                  |
+|    AbsPosZ                  |    52            |    float         |    meters     |                                                                                                                  |
+|    AngX                     |    56            |    float         |    rad        |    roll (X), pitch (Y) and yaw (Z) angles of the   vehicle                                                       |
+|    AngY                     |    60            |    float         |    rad        |                                                                                                                  |
+|    AngZ                     |    64            |    float         |    rad        |                                                                                                                  |
+|    AngRateX                 |    68            |    float         |    rad/s      |    angle rates                                                                                                   |
+|    AngRateY                 |    72            |    float         |    rad/s      |                                                                                                                  |
+|    AngRateZ                 |    76            |    float         |    rad/s      |                                                                                                                  |
+|    AbsVelX                  |    80            |    float         |    m/s        |    absolute speeds along the axis of the global CS                                                               |
+|    AbsVelY                  |    84            |    float         |    m/s        |                                                                                                                  |
+|    AbsVelZ                  |    88            |    float         |    m/s        |                                                                                                                  |
+|    AccelX                   |    92            |    float         |    m/s2       |    vehicle acceleration in the local CS                                                                          |
+|    AccelY                   |    96            |    float         |    m/s2       |                                                                                                                  |
+|    AccelZ                   |    100           |    float         |    m/s2       |                                                                                                                  |
+|    SteerAngle               |    104           |    float         |    deg        |    current road wheel angle                                                                                      |
+|    WheelReactionFL          |    108           |    float         |    N          |    front left wheel reaction                                                                                     |
+|    WheelReactionFR          |    112           |    float         |    N          |    front right wheel reaction                                                                                    |
+|    WheelReactionRR          |    116           |    float         |    N          |    rear right wheel reaction                                                                                     |
+|    WheelReactionRL          |    120           |    float         |    N          |    rear left wheel reaction                                                                                      |
+|    Collision                |    124           |    int32         |    -          |    collision state (0-no collision)                                                                              |
+|    V2xN                     |    128           |    uint8         |    -          |    number of V2x objects                                                                                         |
+|    V2xType                  |    129           |    uint8 [39]    |    -          |    type of the objects:   0 – unknown, 1 – ai racing car   2 – human driver, 3 - slow car, 10 - static object    |
+|    V2xXPos                  |    168           |    float [39]    |    meters     |    position of the objects in the absolute CS                                                                    |
+|    V2xYPos                  |    324           |    float [39]    |    meters     |                                                                                                                  |
+|    V2xSpeed                 |    480           |    float [39]    |    m/s        |    speed of the object                                                                                           |
+|    V2xYaw                   |    636           |    float [39]    |    rad        |    yaw angle of the object                                                                                       |
+|    SimStatus                |    792           |    uint8         |    -          |    3 – active, 5 - stopped                                                                                       |
+|    SimCounter               |    793           |    uint8         |    -          |    increments every send cycle                                                                                   |
+|    Total size: 794 bytes    |                  |                  |               |                                                                                                                  |
