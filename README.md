@@ -1,6 +1,6 @@
 # pyroborace
-[![Build Status: Linux](https://img.shields.io/travis/robotika/pyroborace/master.svg?style=plastic)](https://travis-ci.org/robotika/pyroborace)
-[![Build Status: Windows](https://img.shields.io/appveyor/ci/zwn/pyroborace/master.svg?style=plastic)](https://ci.appveyor.com/project/zwn/pyroborace)
+[![Build Status: Linux](https://img.shields.io/travis/robotika/pyroborace/master.svg?style=plastic&label=linux tests)](https://travis-ci.org/robotika/pyroborace)
+[![Build Status: Windows](https://img.shields.io/appveyor/ci/robotika/pyroborace/master.svg?style=plastic&label=windows tests)](https://ci.appveyor.com/project/robotika/pyroborace)
 
 Python driver for Formula-E Roborace
 
