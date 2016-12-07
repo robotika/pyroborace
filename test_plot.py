@@ -1,5 +1,6 @@
-import unittest
 import math
+import tempfile
+import unittest
 
 from plot import draw
 from segment import Segment
@@ -14,6 +15,7 @@ class PlotTest(unittest.TestCase):
 
         track = Track([line, arc]*4, width = 20)
         fig = draw(track)
-        fig.savefig('test-plot.png')
+        with tempfile.TemporaryFile() as f:
+            fig.savefig(f, format='png')
 
 # vim: expandtab sw=4 ts=4
