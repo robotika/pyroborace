@@ -46,6 +46,9 @@ def drive(track):
         try:
             status = soc.recv(1024)
             assert len(status) == 794, len(status)
+            sim_status = struct.unpack_from('B', status, 792)[0]
+            if sim_status == 5: # simulation stopped
+                break
             absPosX, absPosY, absPosZ = struct.unpack_from('fff', status, 44)
             angX, angY, angZ = struct.unpack_from('fff', status, 56)
             heading = angZ  # in radiands +/- PI
