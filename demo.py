@@ -2,7 +2,7 @@
   follow the race loop
 
   usage:
-     demo.py <track XML file>
+     demo.py <track XML file> [<input log file>]
 """
 
 import math
@@ -10,7 +10,7 @@ import os
 import struct
 import sys
 
-from iolog import IOLog, Timeout
+from iolog import IOLog, Timeout, IOFromFile
 from track import Track
 
 
@@ -90,8 +90,13 @@ if __name__ == "__main__":
         sys.exit(2)
     filename = sys.argv[1]
     track = Track.from_xml_file(filename)
-    prefix = os.path.splitext(os.path.basename(filename))[0]
-    io = IOLog(prefix=prefix)
+
+    if len(sys.argv) == 2:
+        prefix = os.path.splitext(os.path.basename(filename))[0]
+        io = IOLog(prefix=prefix)
+    else:
+        io = IOFromFile(filename=sys.argv[2])
+
     drive(io, track)
 
 # vim: expandtab sw=4 ts=4

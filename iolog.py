@@ -5,7 +5,7 @@
 from datetime import datetime
 import os
 import socket
-from struct import pack
+from struct import pack, unpack
 
 
 MAGIC_HEADER = 0x492F4F01  # I/O
@@ -52,5 +52,31 @@ class IOLog(object):
             return data
         except socket.timeout as e:
             raise Timeout(e)
+
+
+class IOFromFile(object):
+
+    def __init__(self, filename):
+        self.f = open(filename, 'rb')
+        data = self.f.read(8)
+        assert unpack('II', data) == (MAGIC_HEADER, VERSION)
+
+    def bind(self, address):
+        pass
+
+    def settimeout(self, value):
+        pass
+
+    def sendto(self, data, address):
+        length, io_dir = unpack('HH', self.f.read(4))
+        assert io_dir == OUTPUT
+        ref_data = self.f.read(length - 2)
+        assert data == ref_data
+
+    def recv(self, bufsize):
+        length, io_dir = unpack('HH', self.f.read(4))
+        assert io_dir == INPUT
+        assert length - 2 <= bufsize
+        return self.f.read(length - 2)
 
 # vim: expandtab sw=4 ts=4
