@@ -6,6 +6,7 @@
 """
 
 import math
+import os
 import struct
 import sys
 
@@ -89,7 +90,8 @@ if __name__ == "__main__":
         sys.exit(2)
     filename = sys.argv[1]
     track = Track.from_xml_file(filename)
-    io = IOLog()
+    prefix = os.path.splitext(os.path.basename(filename))[0]
+    io = IOLog(prefix=prefix)
     drive(io, track)
 
 # vim: expandtab sw=4 ts=4
