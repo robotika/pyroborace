@@ -79,4 +79,17 @@ class IOFromFile(object):
         assert length - 2 <= bufsize
         return self.f.read(length - 2)
 
+
+def packet_gen(filename):
+    f = open(filename, 'rb')
+    data = f.read(8)
+    assert unpack('II', data) == (MAGIC_HEADER, VERSION)
+    while True:
+        data = f.read(4)
+        if len(data) != 4:
+            break  # EOF
+
+        length, io_dir = unpack('HH', data)
+        yield io_dir, f.read(length - 2)
+
 # vim: expandtab sw=4 ts=4
