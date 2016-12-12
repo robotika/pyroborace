@@ -3,8 +3,9 @@
   usage:
      python packets.py <logfile>
 """
-import sys
+import math
 from struct import unpack_from
+import sys
 
 from iolog import packet_gen, INPUT, OUTPUT
 
@@ -43,6 +44,9 @@ class Sensors(object):
         self.dist = dist
         self.pos3d = pos3d
         self.vel3d = vel3d
+
+    def speed(self):
+        return math.sqrt(sum([x*x for x in self.vel3d]))
 
     def __str__(self):
         return 'Sensors(time={}, dist={}, pos={}, vel={})'.format(
