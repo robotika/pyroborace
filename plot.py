@@ -2,7 +2,7 @@
 """
   Plot track data
   usage:
-       ./plot.py <track XML> [<log file>]
+       ./plot.py <track XML> [<log file> [<log file> ...]]
 """
 import sys
 from math import sin, cos, pi
@@ -92,9 +92,9 @@ if __name__ == "__main__":
     track = Track.from_xml_file(filename)
     fig = draw(track)
 
-    if len(sys.argv) > 2:
+    for filename in sys.argv[2:]:
         x, y = [], []
-        for sensors in sensors_gen(sys.argv[2]):
+        for sensors in sensors_gen(filename):
             x.append(sensors.pos3d[0])
             y.append(sensors.pos3d[1])
         plt.plot(x, y, '--')
