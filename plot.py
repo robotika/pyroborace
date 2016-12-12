@@ -2,7 +2,7 @@
 """
   Plot track data
   usage:
-       ./plot.py <track XML>
+       ./plot.py <track XML> [<log file>]
 """
 import sys
 from math import sin, cos, pi
@@ -12,6 +12,8 @@ from matplotlib.path import Path
 import matplotlib.patches as patches
 
 from track import Track
+from packets import sensors_gen
+
 
 # Notes:
 #
@@ -88,7 +90,14 @@ if __name__ == "__main__":
 
     filename = sys.argv[1]
     track = Track.from_xml_file(filename)
-    draw(track)
+    fig = draw(track)
+
+    if len(sys.argv) > 2:
+        x, y = [], []
+        for sensors in sensors_gen(sys.argv[2]):
+            x.append(sensors.pos3d[0])
+            y.append(sensors.pos3d[1])
+        plt.plot(x, y, '--')
     plt.show()
 
 # vim: expandtab sw=4 ts=4

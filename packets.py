@@ -31,19 +31,23 @@ class Command(object):
 
 class Sensors(object):
 
+    SIMULATION_STOPPED = 5
+
     @staticmethod
     def from_packet(packet):
         assert len(packet) == 794, len(packet)
         time, dist = unpack_from('ff', packet, 0)
         pos3d = unpack_from('fff', packet, 44)
         vel3d = unpack_from('fff', packet, 80)
-        return Sensors(time, dist, pos3d, vel3d)
+        sim_status = unpack_from('B', packet, 792)[0]
+        return Sensors(time, dist, pos3d, vel3d, sim_status)
 
-    def __init__(self, time, dist, pos3d, vel3d):
+    def __init__(self, time, dist, pos3d, vel3d, sim_status):
         self.time = time
         self.dist = dist
         self.pos3d = pos3d
         self.vel3d = vel3d
+        self.sim_status = sim_status
 
     def speed(self):
         return math.sqrt(sum([x*x for x in self.vel3d]))
@@ -51,6 +55,14 @@ class Sensors(object):
     def __str__(self):
         return 'Sensors(time={}, dist={}, pos={}, vel={})'.format(
                 self.time, self.dist, self.pos3d, self.vel3d)
+
+
+def sensors_gen(filename):
+    for io_dir, packet in packet_gen(filename):
+        if io_dir == INPUT:
+            sensors = Sensors.from_packet(packet)
+            if sensors.sim_status != Sensors.SIMULATION_STOPPED:
+                yield sensors
 
 
 if __name__ == "__main__":
