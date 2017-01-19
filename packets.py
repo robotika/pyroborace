@@ -67,7 +67,7 @@ def sensors_gen(filename):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
 
     for io_dir, packet in packet_gen(sys.argv[1]):
@@ -77,6 +77,6 @@ if __name__ == "__main__":
             obj = Command.from_packet(packet)
         else:
             assert 0, io_dir  # unsuported type
-        print obj
+        print(obj)
 
 # vim: expandtab sw=4 ts=4
