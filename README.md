@@ -1,5 +1,5 @@
 # pyroborace
-![Python: v2.7](https://img.shields.io/badge/python-v2.7-blue.svg?style=plastic)
+![Python: v3.5](https://img.shields.io/badge/python-v3.5-blue.svg?style=plastic)
 [![Build Status: Linux](https://img.shields.io/travis/robotika/pyroborace/master.svg?style=plastic&label=linux tests)](https://travis-ci.org/robotika/pyroborace)
 [![Build Status: Windows](https://img.shields.io/appveyor/ci/robotika/pyroborace/master.svg?style=plastic&label=windows tests)](https://ci.appveyor.com/project/robotika/pyroborace)
 
