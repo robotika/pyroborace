@@ -2,8 +2,10 @@ version: "{build}"
 skip_branch_with_pr: true
 environment:
   matrix:
-  - PYTHON: c:\python27
-  - PYTHON: c:\python27-x64
+  - PYTHON: c:\python35
+  - PYTHON: c:\python35-x64
+  - PYTHON: c:\python36
+  - PYTHON: c:\python36-x64
 build: off
 install:
 - cmd: '%PYTHON%\python.exe -m pip install -r requirements.txt'

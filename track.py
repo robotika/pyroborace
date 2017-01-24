@@ -42,9 +42,9 @@ def print_track(track):
         else:
             length += segment.arc * segment.radius
             # TODO variable turns
-        print segment.name
-    print
-    print math.degrees(angle), length
+        print(segment.name)
+    print()
+    print(math.degrees(angle), length)
 
 
 def track2xy(track):
@@ -152,20 +152,20 @@ class Track:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
     path = sys.argv[1]
     if path.endswith('xml'):
-        print path
+        print(path)
         track = Track.from_xml_file(path)
-        print track2xy(track.segments)
+        print(track2xy(track.segments))
     else:
         for dirpath, dirnames, filenames in os.walk(path):
             for filename in filenames:
                 if filename.endswith('xml'):
                     track = Track.from_xml_file(os.path.join(dirpath, filename))
                     end_pose = track2xy(track.segments)
-                    print filename, end_pose
+                    print(filename, end_pose)
                     assert abs(end_pose[0]) + abs(end_pose[1]) < 0.5, end_pose
                     deg_angle = int(round(math.degrees(end_pose[2])))
                     assert deg_angle in [-360, 0, 360], deg_angle
